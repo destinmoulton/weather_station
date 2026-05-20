@@ -6,15 +6,14 @@
 #define WEATHER_STATION_EVENT_DISPATCHER_H
 #include <functional>
 #include <unordered_map>
-#include <iostream>
+#include <vector>
 
 // scoped enum
 enum class Event
 {
-    OnClick,
-    OnHover,
-    OnKeyPress,
-    OnResize
+    WeatherUpdate,
+    WeatherInitialLoadComplete,
+    NextView
 };
 
 // function event handler
@@ -27,6 +26,6 @@ public:
     void dispatch(Event event) const;
 
 private:
-    std::unordered_map<Event, EventHandler> handlers;
+    std::unordered_map<Event, std::vector<EventHandler>> handlers;
 };
 #endif //WEATHER_STATION_EVENT_DISPATCHER_H

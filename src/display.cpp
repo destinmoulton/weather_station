@@ -7,12 +7,16 @@
 
 #include <Wire.h>
 
-Display::Display(AppState& state) : m_state(state)
+Display::Display(AppState& state, EventDispatcher& dispatcher) : m_state(state), m_dispatcher(dispatcher)
 {
     m_current_view = View::Loading;
 
     // Constructor
     m_oled = Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+    dispatcher.registerHandler(Event::NextView, [this]() { handleNextView(); });
+    dispatcher.registerHandler(Event::WeatherInitialLoadComplete, [this]() { handleWeatherInitialLoadComplete(); });
+    dispatcher.registerHandler(Event::WeatherUpdate, [this]() { handleWeatherUpdate(); });
 }
 
 Display::~Display()
@@ -35,6 +39,52 @@ bool Display::begin()
     viewLoading();
 
     return true;
+}
+
+void Display::handleWeatherInitialLoadComplete()
+{
+    m_current_view = View::Weather;
+    updateView();
+}
+
+void Display::handleWeatherUpdate()
+{
+    viewWeather();
+}
+
+void Display::handleNextView()
+{
+    switch (m_current_view)
+    {
+    case View::Loading:
+        // Loading should lead directly to weather
+        m_current_view = View::Weather;
+        break;
+    case View::Weather:
+        m_current_view = View::Settings;
+        break;
+    case View::Settings:
+        m_current_view = View::Weather;
+        break;
+    }
+    updateView();
+}
+
+void Display::updateView()
+{
+    switch (m_current_view)
+    {
+    case View::Loading:
+        viewLoading();
+        break;
+    case View::Weather:
+        viewWeather();
+        break;
+    case View::Settings:
+        viewSettings();
+        break;
+    }
+    updateView();
 }
 
 void Display::viewLoading()

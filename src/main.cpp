@@ -48,8 +48,8 @@ IPAddress primaryDNS(1, 1, 1, 1); //optional
 IPAddress secondaryDNS(8, 8, 4, 4);
 
 AppState app_state{0.0, 0.0, String("0.0,0.0")};
-Display display(app_state);
-EventDispatcher events;
+EventDispatcher dispatcher;
+Display display(app_state, dispatcher);
 
 // The handler fired when the button is pressed
 // NOTE: DO NOT DO ANY Serial printing in the interrupt methods - it will crash!
@@ -194,6 +194,16 @@ void readDHTSensor()
     app_state.humidity = total_humidity / count_nonzero_humidities;
   }
 
+  if (count_nonzero_temperatures == 1)
+  {
+    // Just one reading so initial load is complete
+    dispatcher.dispatch(Event::WeatherInitialLoadComplete);
+  }
+  else if (count_nonzero_temperatures > 1)
+  {
+    // Regular weather updated
+    dispatcher.dispatch(Event::WeatherUpdate);
+  }
 
   Serial.printf(
     "Measured Temp: %4.2f F | Count Temperature Measurements: %d | Average Temp: %4.2f F | Measured Humidity: %4.2f %% | Count Humidity Measurements: %d | Average Humidity: %4.2f %%",

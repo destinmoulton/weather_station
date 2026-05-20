@@ -7,6 +7,7 @@
 
 #include <Adafruit_SSD1306.h> // oled
 
+#include "event_dispatcher.h"
 #include "state.h"
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
@@ -15,22 +16,28 @@
 
 enum class View
 {
-    Loading,
+    Loading = 0,
     Weather,
-    Settings
+    Settings,
+    Count_View_States
 };
 
 class Display
 {
 public:
-    Display(AppState& state);
+    Display(AppState& state, EventDispatcher& dispatcher);
     ~Display();
     bool begin();
+    void handleNextView();
+    void handleWeatherInitialLoadComplete();
+    void handleWeatherUpdate();
 
 protected:
     Adafruit_SSD1306 m_oled;
     const AppState& m_state;
+    const EventDispatcher& m_dispatcher;
     View m_current_view;
+    void updateView();
     void viewLoading();
     void viewSettings();
     void viewWeather();
