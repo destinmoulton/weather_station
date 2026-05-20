@@ -10,6 +10,7 @@
 #include <DHT.h>
 
 #include "display.h"
+#include "event_dispatcher.h"
 
 const int OLED_NUMBER_PAGES = 2;
 int oled_current_page = 1;
@@ -48,6 +49,7 @@ IPAddress secondaryDNS(8, 8, 4, 4);
 
 AppState app_state{0.0, 0.0, String("0.0,0.0")};
 Display display(app_state);
+EventDispatcher events;
 
 // The handler fired when the button is pressed
 // NOTE: DO NOT DO ANY Serial printing in the interrupt methods - it will crash!

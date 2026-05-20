@@ -7,7 +7,5 @@
 
 #include <WiFi.h>
 void readDHTSensor();
-void displayTempAndHumidity();
-void displayWiFiInformation();
 void clientConnectedToServer(WiFiClient client);
 #endif //TEMP_AND_LCD_WITH_BUTTON_MAIN_H
