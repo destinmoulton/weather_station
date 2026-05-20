@@ -107,12 +107,13 @@ void setup()
 
 
   // Setup the button pin
-  pinMode(BUTTONPIN, INPUT);
+  //pinMode(BUTTONPIN, INPUT);
   // Attach the interrupt function
-  attachInterrupt(BUTTONPIN, buttonPressHandler, RISING);
+  //attachInterrupt(BUTTONPIN, buttonPressHandler, RISING);
 
   display.begin();
 
+  Serial.println("About to begin dht...");
   // Start DHT
   dht.begin();
 }
@@ -122,7 +123,6 @@ void loop()
 {
   // Don't use delay() so we can have a functional loop
   unsigned long currentMillis = millis();
-
 
   if (currentMillis - dht_previous_ms >= DHT_DELAY_MS)
   {

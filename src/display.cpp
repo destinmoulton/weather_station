@@ -36,7 +36,7 @@ bool Display::begin()
     // Enable advanced character set (for things like degree symbol)
     m_oled.cp437(true);
 
-    viewLoading();
+    updateView();
 
     return true;
 }
@@ -84,7 +84,6 @@ void Display::updateView()
         viewSettings();
         break;
     }
-    updateView();
 }
 
 void Display::viewLoading()
