@@ -5,15 +5,11 @@
 #include "main.h"
 #include <WiFi.h>
 #include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h> // oled
 #include <DHT.h>
 
+#include "buttons.h"
 #include "display.h"
 #include "event_dispatcher.h"
-
-const int OLED_NUMBER_PAGES = 2;
-int oled_current_page = 1;
 
 // Configuration values for the temp/humidity sensor
 #define DHTPIN 19
@@ -26,9 +22,6 @@ float humidities[NUM_TO_AVERAGE];
 float average_temperature = 0;
 float average_humidity = 0;
 DHT dht(DHTPIN, DHTTYPE);
-
-// Button Pin
-const int BUTTONPIN = 34;
 
 // Setup web server (port 80)
 WiFiServer server(80);
@@ -47,22 +40,11 @@ IPAddress subnet(255, 255, 0, 0);
 IPAddress primaryDNS(1, 1, 1, 1); //optional
 IPAddress secondaryDNS(8, 8, 4, 4);
 
+// Create the local instances
 AppState app_state{0.0, 0.0, String("0.0,0.0")};
 EventDispatcher dispatcher;
+Buttons buttons(dispatcher);
 Display display(app_state, dispatcher);
-
-// The handler fired when the button is pressed
-// NOTE: DO NOT DO ANY Serial printing in the interrupt methods - it will crash!
-void IRAM_ATTR buttonPressHandler()
-{
-  // Change the "page" visible on the oled
-  oled_current_page++;
-  if (oled_current_page > OLED_NUMBER_PAGES)
-  {
-    // Reset back to the first page
-    oled_current_page = 1;
-  }
-}
 
 void setup()
 {
@@ -105,12 +87,10 @@ void setup()
   // Start the web server
   server.begin();
 
+  // Start the buttons
+  buttons.begin();
 
-  // Setup the button pin
-  //pinMode(BUTTONPIN, INPUT);
-  // Attach the interrupt function
-  //attachInterrupt(BUTTONPIN, buttonPressHandler, RISING);
-
+  // Start the display
   display.begin();
 
   Serial.println("About to begin dht...");
@@ -205,10 +185,10 @@ void readDHTSensor()
     dispatcher.dispatch(Event::WeatherUpdate);
   }
 
-  Serial.printf(
-    "Measured Temp: %4.2f F | Count Temperature Measurements: %d | Average Temp: %4.2f F | Measured Humidity: %4.2f %% | Count Humidity Measurements: %d | Average Humidity: %4.2f %%",
-    t, count_nonzero_temperatures, app_state.temperature, h, count_nonzero_humidities, app_state.humidity);
-  Serial.println("");
+  //Serial.printf(
+  //  "Measured Temp: %4.2f F | Count Temperature Measurements: %d | Average Temp: %4.2f F | Measured Humidity: %4.2f %% | Count Humidity Measurements: %d | Average Humidity: %4.2f %%",
+  //  t, count_nonzero_temperatures, app_state.temperature, h, count_nonzero_humidities, app_state.humidity);
+  //Serial.println("");
 }
 
 
