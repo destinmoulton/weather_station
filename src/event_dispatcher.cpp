@@ -9,7 +9,6 @@ void EventDispatcher::registerHandler(Event event, EventHandler handler)
 
 void EventDispatcher::dispatch(Event event) const
 {
-    Serial.println("EventDispatcher::dispatch()");
     auto it = handlers.find(event);
     if (it != handlers.end())
     {
