@@ -4,8 +4,8 @@
 
 #include "menu.h"
 
-Menu::Menu(Adafruit_SSD1306& device, AppState& state)
-    : Screen(device, state)
+Menu::Menu(Adafruit_SSD1306& device, AppState& state, EventDispatcher& dispatcher)
+    : Screen(device, state, dispatcher)
 {
     m_activeItemIndex = 0;
 }
@@ -29,7 +29,7 @@ void Menu::render()
             // Print a space in liu of >
             m_device.print("  ");
         }
-        m_device.print(m_items[i]);
+        m_device.print(m_items[i].title);
         m_device.print("\n");
     }
     m_device.display();
@@ -59,4 +59,12 @@ void Menu::onDown()
         m_activeItemIndex++;
     }
     render();
+}
+
+void Menu::onLeft()
+{
+}
+
+void Menu::onRight()
+{
 }

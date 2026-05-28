@@ -11,9 +11,9 @@ Display::Display(AppState& state, EventDispatcher& dispatcher)
     : m_state(state),
       m_dispatcher(dispatcher),
       m_active_screen(nullptr),
-      m_screen_loading(m_oled, state),
-      m_screen_weather(m_oled, state),
-      m_screen_settings(m_oled, state)
+      m_screen_loading(m_oled, state, dispatcher),
+      m_screen_weather(m_oled, state, dispatcher),
+      m_screen_settings(m_oled, state, dispatcher)
 {
     m_oled = Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 

@@ -14,6 +14,9 @@ enum class Event
     WeatherUpdate,
     WeatherInitialLoadComplete,
     NextView,
+    WifiInfoScreen,
+    WifiRestart,
+    Reboot,
     PressButtonUp,
     PressButtonDown
 };

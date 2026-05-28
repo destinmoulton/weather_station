@@ -9,7 +9,7 @@
 class MenuSettings : public Menu
 {
 public:
-    MenuSettings(Adafruit_SSD1306& device, AppState& state);
+    MenuSettings(Adafruit_SSD1306& device, AppState& state, EventDispatcher& dispatcher);
 };
 
 #endif //WEATHER_STATION_MENU_SETTINGS_H

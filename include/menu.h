@@ -7,19 +7,27 @@
 #include <vector>
 
 #include "screen.h"
+#include "event_dispatcher.h"
 
+struct MenuItem
+{
+    String title;
+    Event event;
+};
 
 class Menu : public Screen
 {
 public:
-    Menu(Adafruit_SSD1306& device, AppState& state);
+    Menu(Adafruit_SSD1306& device, AppState& state, EventDispatcher& dispatcher);
     void render() override;
     void onUp() override;
     void onDown() override;
+    void onRight() override;
+    void onLeft() override;
 
 protected:
     uint16_t m_activeItemIndex;
-    std::vector<String> m_items;
+    std::vector<MenuItem> m_items;
     String m_title;
 };
 

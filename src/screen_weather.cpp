@@ -5,8 +5,8 @@
 #include "screen.h"
 #include "screen_weather.h"
 
-ScreenWeather::ScreenWeather(Adafruit_SSD1306& device, AppState& state)
-    : Screen(device, state)
+ScreenWeather::ScreenWeather(Adafruit_SSD1306& device, AppState& state, EventDispatcher& dispatcher)
+    : Screen(device, state, dispatcher)
 {
 }
 

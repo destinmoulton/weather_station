@@ -7,8 +7,8 @@
 #include "Adafruit_SSD1306.h"
 #include "state.h"
 
-ScreenLoading::ScreenLoading(Adafruit_SSD1306& device, AppState& state)
-    : Screen(device, state)
+ScreenLoading::ScreenLoading(Adafruit_SSD1306& device, AppState& state, EventDispatcher& dispatcher)
+    : Screen(device, state, dispatcher)
 {
 }
 

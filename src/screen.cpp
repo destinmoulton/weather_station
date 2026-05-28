@@ -4,8 +4,10 @@
 
 #include "screen.h"
 
-Screen::Screen(Adafruit_SSD1306& device, AppState& state)
-    : m_device(device), m_state(state)
+#include "event_dispatcher.h"
+
+Screen::Screen(Adafruit_SSD1306& device, AppState& state, EventDispatcher& dispatcher)
+    : m_device(device), m_state(state), m_dispatcher(dispatcher)
 {
 }
 
@@ -18,5 +20,13 @@ void Screen::onUp()
 }
 
 void Screen::onDown()
+{
+}
+
+void Screen::onRight()
+{
+}
+
+void Screen::onLeft()
 {
 }

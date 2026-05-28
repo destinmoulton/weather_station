@@ -9,7 +9,7 @@
 class ScreenLoading : public Screen
 {
 public:
-    ScreenLoading(Adafruit_SSD1306& device, AppState& state);
+    ScreenLoading(Adafruit_SSD1306& device, AppState& state, EventDispatcher& dispatcher);
     void render() override;
 };
 #endif //WEATHER_STATION_SCREEN_LOADING_H
