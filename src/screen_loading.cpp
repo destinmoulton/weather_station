@@ -5,7 +5,7 @@
 #include "screen_loading.h"
 
 #include "Adafruit_SSD1306.h"
-#include "state.h"
+#include "appstate.h"
 
 ScreenLoading::ScreenLoading(Adafruit_SSD1306& device, AppState& state, EventDispatcher& dispatcher)
     : Screen(device, state, dispatcher)

@@ -13,7 +13,7 @@
 #include "screen_loading.h"
 #include "screen_weather.h"
 #include "screen_wifi_info.h"
-#include "state.h"
+#include "appstate.h"
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels

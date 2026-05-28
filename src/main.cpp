@@ -10,6 +10,7 @@
 #include "buttons.h"
 #include "display.h"
 #include "event_dispatcher.h"
+#include "wifi_interface.h"
 
 // Configuration values for the temp/humidity sensor
 #define DHTPIN 19
@@ -28,23 +29,13 @@ WiFiServer server(80);
 // Variable to store the HTTP request
 String header;
 
-// Wifi details
-const char* SSID = "Bigger Brother";
-const char* WIFI_PASSWORD = "TheOutpost575";
-
-// Set your Static IP address
-IPAddress local_IP(192, 168, 100, 125);
-// Set your Gateway IP address
-IPAddress gateway(192, 168, 100, 1);
-IPAddress subnet(255, 255, 0, 0);
-IPAddress primaryDNS(1, 1, 1, 1); //optional
-IPAddress secondaryDNS(8, 8, 4, 4);
 
 // Create the local instances
-AppState app_state{0.0, 0.0, String("0.0,0.0")};
+AppState app_state{0.0, 0.0, String("0.0.0.0")};
 EventDispatcher dispatcher;
 Buttons buttons(dispatcher);
 Display display(app_state, dispatcher);
+WifiInterface wifi_interface(app_state, dispatcher);
 
 void setup()
 {
@@ -65,24 +56,7 @@ void setup()
     humidities[i] = 0.0;
   }
 
-  Serial.println("\nConfiguring static ip...");
-  // Configures static IP address
-  if (!WiFi.config(local_IP, gateway, subnet, primaryDNS, secondaryDNS))
-  {
-    Serial.println("Static IP Failed to configure");
-  }
-
-  // Connect to wifi
-  //WiFi.mode(WIFI_STA);
-  WiFi.begin(SSID, WIFI_PASSWORD);
-  Serial.println("Connecting to WiFi...");
-  while (WiFi.status() != WL_CONNECTED)
-  {
-    Serial.print(".");
-    delay(100);
-  }
-  Serial.print("Connected to WiFi! Local ESP32 IP: ");
-  Serial.println(WiFi.localIP());
+  wifi_interface.connect();
 
   // Start the web server
   server.begin();

@@ -6,7 +6,7 @@
 #define WEATHER_STATION_SCREEN_H
 #include "Adafruit_SSD1306.h"
 #include "event_dispatcher.h"
-#include "state.h"
+#include "appstate.h"
 
 class Screen
 {
