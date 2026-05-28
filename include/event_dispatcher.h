@@ -13,7 +13,9 @@ enum class Event
 {
     WeatherUpdate,
     WeatherInitialLoadComplete,
-    NextView
+    NextView,
+    PressButtonUp,
+    PressButtonDown
 };
 
 // function event handler

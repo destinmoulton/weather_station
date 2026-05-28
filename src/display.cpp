@@ -7,13 +7,19 @@
 
 #include <Wire.h>
 
-Display::Display(AppState& state, EventDispatcher& dispatcher) : m_state(state), m_dispatcher(dispatcher)
+Display::Display(AppState& state, EventDispatcher& dispatcher)
+    : m_state(state),
+      m_dispatcher(dispatcher),
+      m_active_screen(nullptr),
+      m_screen_loading(m_oled, state),
+      m_screen_weather(m_oled, state),
+      m_screen_settings(m_oled, state)
 {
-    m_current_view = View::Loading;
-
-    // Constructor
     m_oled = Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
+
+    dispatcher.registerHandler(Event::PressButtonUp, [this]() { handlePressButtonUp(); });
+    dispatcher.registerHandler(Event::PressButtonDown, [this]() { handlePressButtonDown(); });
     dispatcher.registerHandler(Event::NextView, [this]() { handleNextView(); });
     dispatcher.registerHandler(Event::WeatherInitialLoadComplete, [this]() { handleWeatherInitialLoadComplete(); });
     dispatcher.registerHandler(Event::WeatherUpdate, [this]() { handleWeatherUpdate(); });
@@ -35,22 +41,23 @@ bool Display::begin()
 
     // Enable advanced character set (for things like degree symbol)
     m_oled.cp437(true);
+    m_oled.setTextColor(WHITE);
 
-    updateView();
+    changeScreen(View::Loading);
 
     return true;
 }
 
 void Display::handleWeatherInitialLoadComplete()
 {
-    m_current_view = View::Weather;
-    updateView();
+    changeScreen(View::Weather);
 }
 
 void Display::handleWeatherUpdate()
 {
-    viewWeather();
+    render();
 }
+
 
 void Display::handleNextView()
 {
@@ -58,75 +65,50 @@ void Display::handleNextView()
     {
     case View::Loading:
         // Loading should lead directly to weather
-        m_current_view = View::Weather;
+        changeScreen(View::Weather);
         break;
     case View::Weather:
-        m_current_view = View::Settings;
+        changeScreen(View::Settings);
         break;
     case View::Settings:
-        m_current_view = View::Weather;
+        changeScreen(View::Weather);
         break;
     }
-    updateView();
 }
 
-void Display::updateView()
+void Display::handlePressButtonUp()
 {
+    Serial.println(F("Pressing button up"));
+    m_active_screen->onUp();
+}
+
+void Display::handlePressButtonDown()
+{
+    Serial.println(F("Pressing button down"));
+    m_active_screen->onDown();
+}
+
+void Display::changeScreen(const View view)
+{
+    m_current_view = view;
+
     switch (m_current_view)
     {
     case View::Loading:
-        viewLoading();
+        m_active_screen = &m_screen_loading;
         break;
     case View::Weather:
-        viewWeather();
+        m_active_screen = &m_screen_weather;
         break;
     case View::Settings:
-        viewSettings();
+        m_active_screen = &m_screen_settings;
         break;
     }
+    render();
 }
 
-void Display::viewLoading()
+void Display::render()
 {
-    if (m_current_view != View::Loading) return;
-
-    m_oled.clearDisplay();
-
-    m_oled.setTextSize(1);
-    m_oled.setTextColor(WHITE);
-    m_oled.setCursor(0, 10);
-    // Display static text
-    m_oled.println("Loading...");
-    m_oled.display();
+    m_active_screen->render();
 }
 
-// NOTE: DO NOT DO ANY Serial printing in this function
-void Display::viewWeather()
-{
-    if (m_current_view != View::Weather) return;
-
-    m_oled.clearDisplay();
-
-    m_oled.setTextSize(2);
-    m_oled.setTextColor(WHITE);
-    m_oled.setCursor(0, 10);
-
-    m_oled.printf("%4.2f%c F\n", m_state.temperature, 0xF8);
-    m_oled.printf("%4.2f%% Hum\n", m_state.humidity);
-
-    m_oled.display();
-}
-
-// NOTE: DO NOT DO ANY Serial printing in this function
-void Display::viewSettings()
-{
-    if (m_current_view != View::Settings) return;
-
-    m_oled.clearDisplay();
-    m_oled.setTextSize(1);
-    m_oled.setTextColor(WHITE);
-    m_oled.setCursor(0, 10);
-    m_oled.print("IP: ");
-    m_oled.print(m_state.ip);
-    m_oled.display();
-}

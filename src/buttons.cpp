@@ -58,7 +58,7 @@ void IRAM_ATTR Buttons::onInterruptPressButton(void* evt_arg)
     {
         const uint32_t now = millis();
 
-        ButtonEvent evt = (ButtonEvent)(uintptr_t)evt_arg;
+        const ButtonEvent evt = (ButtonEvent)(uintptr_t)evt_arg;
         if (now - m_instance->m_lastPressTimes[evt] > BUTTON_DEBOUNCE_TIME)
         {
             m_instance->m_lastPressTimes[evt] = now;
@@ -91,6 +91,12 @@ void Buttons::task(void* pvParameters)
         {
             switch (evt)
             {
+            case ButtonEvent::BUTTON_UP:
+                self->m_dispatcher.dispatch(Event::PressButtonUp);
+                break;
+            case ButtonEvent::BUTTON_DOWN:
+                self->m_dispatcher.dispatch(Event::PressButtonDown);
+                break;
             case ButtonEvent::BUTON_RIGHT:
                 self->m_dispatcher.dispatch(Event::NextView);
                 break;
