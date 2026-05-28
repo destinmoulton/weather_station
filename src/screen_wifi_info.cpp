@@ -15,7 +15,7 @@ void ScreenWifiInfo::render()
     m_device.clearDisplay();
     m_device.setTextSize(1);
     m_device.setCursor(0, 0);
-    m_device.println("----   Wifi Info   ----");
+    m_device.println("---   Wifi Info   ---");
     m_device.print("IP: ");
     m_device.print(m_state.ip);
     m_device.print("\n");
