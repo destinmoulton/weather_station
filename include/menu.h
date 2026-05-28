@@ -29,6 +29,7 @@ protected:
     uint16_t m_activeItemIndex;
     std::vector<MenuItem> m_items;
     String m_title;
+    Event m_left_button_event;
 };
 
 

@@ -11,7 +11,7 @@ MenuSettings::MenuSettings(Adafruit_SSD1306& device, AppState& state, EventDispa
 {
     m_title = "---   Settings   ---";
     m_items.push_back(MenuItem{
-        "Wifi Info", Event::WifiInfoScreen
+        "Wifi Info", Event::JumpToWifiInfoScreen
     });
     m_items.push_back(MenuItem{
         "Restart Wifi", Event::WifiRestart

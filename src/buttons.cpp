@@ -97,8 +97,11 @@ void Buttons::task(void* pvParameters)
             case ButtonEvent::BUTTON_DOWN:
                 self->m_dispatcher.dispatch(Event::PressButtonDown);
                 break;
+            case ButtonEvent::BUTTON_LEFT:
+                self->m_dispatcher.dispatch(Event::PressButtonLeft);
+                break;
             case ButtonEvent::BUTON_RIGHT:
-                self->m_dispatcher.dispatch(Event::NextView);
+                self->m_dispatcher.dispatch(Event::PressButtonRight);
                 break;
             }
         }

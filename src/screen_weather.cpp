@@ -19,3 +19,13 @@ void ScreenWeather::render()
     m_device.printf("%4.2f%% Hum\n", m_state.humidity);
     m_device.display();
 }
+
+void ScreenWeather::onLeft()
+{
+    m_dispatcher.dispatch(Event::JumpToSettingsScreen);
+}
+
+void ScreenWeather::onRight()
+{
+    m_dispatcher.dispatch(Event::JumpToSettingsScreen);
+}

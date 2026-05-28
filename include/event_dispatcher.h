@@ -14,11 +14,15 @@ enum class Event
     WeatherUpdate,
     WeatherInitialLoadComplete,
     NextView,
-    WifiInfoScreen,
+    JumpToWifiInfoScreen,
+    JumpToWeatherScreen,
+    JumpToSettingsScreen,
     WifiRestart,
     Reboot,
     PressButtonUp,
-    PressButtonDown
+    PressButtonDown,
+    PressButtonLeft,
+    PressButtonRight,
 };
 
 // function event handler

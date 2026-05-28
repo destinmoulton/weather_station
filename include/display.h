@@ -12,6 +12,7 @@
 #include "menu_settings.h"
 #include "screen_loading.h"
 #include "screen_weather.h"
+#include "screen_wifi_info.h"
 #include "state.h"
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
@@ -23,6 +24,7 @@ enum class View
     Loading = 0,
     Weather,
     Settings,
+    WifiInfo,
     Count_View_States
 };
 
@@ -37,6 +39,9 @@ public:
     void handleWeatherUpdate();
     void handlePressButtonUp();
     void handlePressButtonDown();
+    void handlePressButtonLeft();
+    void handlePressButtonRight();
+    void handleShowWifiInfo();
 
 protected:
     Adafruit_SSD1306 m_oled;
@@ -47,6 +52,7 @@ protected:
     ScreenLoading m_screen_loading;
     ScreenWeather m_screen_weather;
     MenuSettings m_screen_settings;
+    ScreenWifiInfo m_screen_wifi_info;
     void changeScreen(const View view);
     void render();
 

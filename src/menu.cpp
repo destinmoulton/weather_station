@@ -8,6 +8,7 @@ Menu::Menu(Adafruit_SSD1306& device, AppState& state, EventDispatcher& dispatche
     : Screen(device, state, dispatcher)
 {
     m_activeItemIndex = 0;
+    m_left_button_event = Event::JumpToWeatherScreen;
 }
 
 void Menu::render()
@@ -63,8 +64,10 @@ void Menu::onDown()
 
 void Menu::onLeft()
 {
+    m_dispatcher.dispatch(m_left_button_event);
 }
 
 void Menu::onRight()
 {
+    m_dispatcher.dispatch(m_items[m_activeItemIndex].event);
 }

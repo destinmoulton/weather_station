@@ -13,16 +13,22 @@ Display::Display(AppState& state, EventDispatcher& dispatcher)
       m_active_screen(nullptr),
       m_screen_loading(m_oled, state, dispatcher),
       m_screen_weather(m_oled, state, dispatcher),
-      m_screen_settings(m_oled, state, dispatcher)
+      m_screen_settings(m_oled, state, dispatcher),
+      m_screen_wifi_info(m_oled, state, dispatcher)
 {
     m_oled = Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 
     dispatcher.registerHandler(Event::PressButtonUp, [this]() { handlePressButtonUp(); });
     dispatcher.registerHandler(Event::PressButtonDown, [this]() { handlePressButtonDown(); });
+    dispatcher.registerHandler(Event::PressButtonLeft, [this]() { handlePressButtonLeft(); });
+    dispatcher.registerHandler(Event::PressButtonRight, [this]() { handlePressButtonRight(); });
     dispatcher.registerHandler(Event::NextView, [this]() { handleNextView(); });
     dispatcher.registerHandler(Event::WeatherInitialLoadComplete, [this]() { handleWeatherInitialLoadComplete(); });
     dispatcher.registerHandler(Event::WeatherUpdate, [this]() { handleWeatherUpdate(); });
+    dispatcher.registerHandler(Event::JumpToWeatherScreen, [this]() { changeScreen(View::Weather); });
+    dispatcher.registerHandler(Event::JumpToSettingsScreen, [this]() { changeScreen(View::Settings); });
+    dispatcher.registerHandler(Event::JumpToWifiInfoScreen, [this]() { changeScreen(View::WifiInfo); });
 }
 
 Display::~Display()
@@ -58,6 +64,10 @@ void Display::handleWeatherUpdate()
     render();
 }
 
+void Display::handleShowWifiInfo()
+{
+}
+
 
 void Display::handleNextView()
 {
@@ -73,19 +83,30 @@ void Display::handleNextView()
     case View::Settings:
         changeScreen(View::Weather);
         break;
+    case View::WifiInfo:
+        changeScreen(View::WifiInfo);
+        break;
     }
 }
 
 void Display::handlePressButtonUp()
 {
-    Serial.println(F("Pressing button up"));
     m_active_screen->onUp();
 }
 
 void Display::handlePressButtonDown()
 {
-    Serial.println(F("Pressing button down"));
     m_active_screen->onDown();
+}
+
+void Display::handlePressButtonLeft()
+{
+    m_active_screen->onLeft();
+}
+
+void Display::handlePressButtonRight()
+{
+    m_active_screen->onRight();
 }
 
 void Display::changeScreen(const View view)
@@ -102,6 +123,9 @@ void Display::changeScreen(const View view)
         break;
     case View::Settings:
         m_active_screen = &m_screen_settings;
+        break;
+    case View::WifiInfo:
+        m_active_screen = &m_screen_wifi_info;
         break;
     }
     render();
