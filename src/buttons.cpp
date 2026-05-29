@@ -38,16 +38,18 @@ Buttons::~Buttons()
 
 void Buttons::begin()
 {
-    // Set the button pin modes
+    // Set the physical button pin modes
     pinMode(PIN_BUTTON_UP, INPUT);
     pinMode(PIN_BUTTON_DOWN, INPUT);
     pinMode(PIN_BUTTON_LEFT, INPUT);
     pinMode(PIN_BUTTON_RIGHT, INPUT);
 
+
     attachInterruptArg(PIN_BUTTON_UP, onInterruptPressButton, (void*)(uintptr_t)BUTTON_UP, RISING);
     attachInterruptArg(PIN_BUTTON_DOWN, onInterruptPressButton, (void*)(uintptr_t)BUTTON_DOWN, RISING);
     attachInterruptArg(PIN_BUTTON_LEFT, onInterruptPressButton, (void*)(uintptr_t)BUTTON_LEFT, RISING);
-    attachInterruptArg(PIN_BUTTON_RIGHT, onInterruptPressButton, (void*)(uintptr_t)BUTON_RIGHT, RISING);
+    attachInterruptArg(PIN_BUTTON_RIGHT, onInterruptPressButton, (void*)(uintptr_t)BUTTON_RIGHT, RISING);
+    attachInterruptArg(PIN_BUTTON_RIGHT, onInterruptPressButton, (void*)(uintptr_t)BUTTON_RIGHT, RISING);
 }
 
 
@@ -100,11 +102,12 @@ void Buttons::task(void* pvParameters)
             case ButtonEvent::BUTTON_LEFT:
                 self->m_dispatcher.dispatch(Event::PressButtonLeft);
                 break;
-            case ButtonEvent::BUTON_RIGHT:
+            case ButtonEvent::BUTTON_RIGHT:
                 self->m_dispatcher.dispatch(Event::PressButtonRight);
                 break;
             }
         }
     }
 }
+
 

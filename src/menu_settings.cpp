@@ -9,7 +9,7 @@
 MenuSettings::MenuSettings(Adafruit_SSD1306& device, AppState& state, EventDispatcher& dispatcher)
     : Menu(device, state, dispatcher)
 {
-    m_title = "---   Settings   ---";
+    m_title = "---    Settings   ---";
     m_items.push_back(MenuItem{
         "Wifi Info", Event::JumpToWifiInfoScreen
     });

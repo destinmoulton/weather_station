@@ -18,7 +18,8 @@ enum ButtonEvent
     BUTTON_UP = 0,
     BUTTON_DOWN,
     BUTTON_LEFT,
-    BUTON_RIGHT,
+    BUTTON_RIGHT,
+    PIR_MOTION,
     STATE_COUNT_EVENTS // event count
 };
 

@@ -32,6 +32,8 @@ String header;
 
 // Create the local instances
 AppState app_state{0.0, 0.0, String("0.0.0.0")};
+
+// Event Handler/Dispatcher
 EventDispatcher dispatcher;
 Buttons buttons(dispatcher);
 Display display(app_state, dispatcher);
@@ -48,6 +50,13 @@ void setup()
 
   // Delay another 1 sec for the serial connection (buggy)
   delay(1000);
+
+
+  // configure the dispatcher to run a reboot if requested
+  dispatcher.registerHandler(Event::Reboot, []
+  {
+    ESP.restart();
+  });
 
   // Initialize the temperature and humidity arrays for averaging
   for (int i = 0; i < NUM_TO_AVERAGE; i++)
