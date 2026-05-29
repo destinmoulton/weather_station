@@ -9,7 +9,6 @@ struct AppState
 {
     float temperature;
     float humidity;
-    String ip;
 };
 
 #endif //WEATHER_STATIION_APP_STATE_H

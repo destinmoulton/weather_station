@@ -5,24 +5,13 @@
 #include "main.h"
 #include <WiFi.h>
 #include <Wire.h>
-#include <DHT.h>
 
 #include "buttons.h"
 #include "display.h"
 #include "event_dispatcher.h"
+#include "weather.h"
 #include "wifi_interface.h"
 
-// Configuration values for the temp/humidity sensor
-#define DHTPIN 19
-#define DHTTYPE DHT11
-#define NUM_TO_AVERAGE 30
-const long DHT_DELAY_MS = 4000;
-int dht_previous_ms = 0;
-float temperatures[NUM_TO_AVERAGE];
-float humidities[NUM_TO_AVERAGE];
-float average_temperature = 0;
-float average_humidity = 0;
-DHT dht(DHTPIN, DHTTYPE);
 
 // Setup web server (port 80)
 WiFiServer server(80);
@@ -31,13 +20,14 @@ String header;
 
 
 // Create the local instances
-AppState app_state{0.0, 0.0, String("0.0.0.0")};
+AppState app_state{0.0, 0.0};
 
 // Event Handler/Dispatcher
 EventDispatcher dispatcher;
 Buttons buttons(dispatcher);
 Display display(app_state, dispatcher);
 WifiInterface wifi_interface(app_state, dispatcher);
+Weather weather(app_state, dispatcher);
 
 void setup()
 {
@@ -58,12 +48,6 @@ void setup()
     ESP.restart();
   });
 
-  // Initialize the temperature and humidity arrays for averaging
-  for (int i = 0; i < NUM_TO_AVERAGE; i++)
-  {
-    temperatures[i] = 0.0;
-    humidities[i] = 0.0;
-  }
 
   wifi_interface.connect();
 
@@ -76,24 +60,16 @@ void setup()
   // Start the display
   display.begin();
 
-  Serial.println("About to begin dht...");
-  // Start DHT
-  dht.begin();
+  // Start the weather monitoring
+  weather.begin();
 }
 
 
 void loop()
 {
-  // Don't use delay() so we can have a functional loop
-  unsigned long currentMillis = millis();
+  // Run the weather loop
+  weather.loop();
 
-  if (currentMillis - dht_previous_ms >= DHT_DELAY_MS)
-  {
-    dht_previous_ms = currentMillis;
-
-    // Read the sensor
-    readDHTSensor();
-  }
 
   WiFiClient client = server.available(); // Listen for incoming clients
 
@@ -101,77 +77,6 @@ void loop()
   {
     clientConnectedToServer(client);
   }
-}
-
-void readDHTSensor()
-{
-  float h = dht.readHumidity();
-  // Read temperature as Farenheit
-  float t = dht.readTemperature(true);
-
-  if (isnan(h) || isnan(t))
-  {
-    Serial.println(F("Failed to read DHT sensor!"));
-    return;
-  }
-
-  int count_nonzero_temperatures = 0;
-  int count_nonzero_humidities = 0;
-  float total_temperature = 0.0;
-  float total_humidity = 0.0;
-  for (int i = NUM_TO_AVERAGE - 1; i >= 0; i--)
-  {
-    if (i > 0)
-    {
-      // Shift the values for the averaging
-      temperatures[i] = temperatures[i - 1];
-      humidities[i] = humidities[i - 1];
-    }
-    else
-    {
-      // Zeroth element becomes the newest reading
-      temperatures[0] = t;
-      humidities[0] = h;
-    }
-
-
-    if (temperatures[i] != 0.0)
-    {
-      count_nonzero_temperatures++;
-      total_temperature += temperatures[i];
-    }
-    if (humidities[i] != 0.0)
-    {
-      count_nonzero_humidities++;
-      total_humidity += humidities[i];
-    }
-  }
-
-  if (count_nonzero_temperatures > 0)
-  {
-    app_state.temperature = total_temperature / count_nonzero_temperatures;
-  }
-
-  if (count_nonzero_humidities > 0)
-  {
-    app_state.humidity = total_humidity / count_nonzero_humidities;
-  }
-
-  if (count_nonzero_temperatures == 1)
-  {
-    // Just one reading so initial load is complete
-    dispatcher.dispatch(Event::WeatherInitialLoadComplete);
-  }
-  else if (count_nonzero_temperatures > 1)
-  {
-    // Regular weather updated
-    dispatcher.dispatch(Event::WeatherUpdate);
-  }
-
-  //Serial.printf(
-  //  "Measured Temp: %4.2f F | Count Temperature Measurements: %d | Average Temp: %4.2f F | Measured Humidity: %4.2f %% | Count Humidity Measurements: %d | Average Humidity: %4.2f %%",
-  //  t, count_nonzero_temperatures, app_state.temperature, h, count_nonzero_humidities, app_state.humidity);
-  //Serial.println("");
 }
 
 
@@ -223,8 +128,8 @@ void clientConnectedToServer(WiFiClient client)
           client.println("<body><h1>Greenhouse Web Server</h1>");
 
           // Display current temperature
-          client.printf("<p>Temperature: %4.2f &deg;F</p>", average_temperature);
-          client.printf("<p>Humidity: %4.2f %%</p>", average_humidity);
+          client.printf("<p>Temperature: %4.2f &deg;F</p>", app_state.temperature);
+          client.printf("<p>Humidity: %4.2f %%</p>", app_state.humidity);
 
           client.println("</body></html>");
 
