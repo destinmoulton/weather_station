@@ -6,7 +6,9 @@
 #define WEATHER_STATION_WIFI_H
 
 #include <WiFi.h>
+#include <WiFiUdp.h>
 #include "appstate.h"
+#include "EasyNTPClient.h"
 #include "event_dispatcher.h"
 
 
@@ -19,6 +21,8 @@ public:
 private:
     const char* m_wifi_ssid;
     const char* m_wifi_password;
+    WiFiUDP m_udp;
+    EasyNTPClient m_ntp_client;
     const IPAddress m_config_IP;
     const IPAddress m_config_gateway;
     const IPAddress m_config_subnet;

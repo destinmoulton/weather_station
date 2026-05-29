@@ -2,6 +2,8 @@
 // Created by destin on 5/28/26.
 //
 
+#include <WiFi.h>
+#include <WiFiUdp.h>
 #include "wifi_interface.h"
 
 #include "event_dispatcher.h"
@@ -14,10 +16,13 @@
 #define SUBNET 255,255,255,0
 #define PRIMARY_DNS 1,1,1,1
 #define SECONDARY_DNS 8,8,8,8
+#define NTP_SERVER "pool.ntp.org"
+#define NTP_GMT_OFFSET -21600 // GMT-7 (IMPORTANT: negative for -7)
 
 WifiInterface::WifiInterface(AppState& state, EventDispatcher& dispatcher)
     : m_wifi_ssid(SSID),
       m_wifi_password(PASSWORD),
+      m_ntp_client(m_udp,NTP_SERVER,NTP_GMT_OFFSET),
       m_config_IP(IP),
       m_config_gateway(GATEWAY),
       m_config_subnet(SUBNET),
@@ -44,6 +49,12 @@ bool WifiInterface::connect()
         Serial.print(".");
         delay(100);
     }
+
+    // Synchronize the time
+    m_udp.begin(123);
+
+    // Show the time
+    Serial.println(m_ntp_client.getUnixTime());
 
     Serial.print("Connected to WiFi! Local ESP32 IP: ");
     Serial.println(WiFi.localIP());
