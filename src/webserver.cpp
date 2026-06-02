@@ -48,18 +48,19 @@ void WebServer::client_connected(WiFiClient& client)
         // that's the end of the client HTTP request, so send a response:
         if (currentLine.length() == 0)
         {
+          // perform GET operations
+          if (m_header.indexOf("GET /weather") >= 0)
+          {
+            api_get_weather(client);
+            break;
+          }
+
           // HTTP headers always start with a response code (e.g. HTTP/1.1 200 OK)
           // and a content-type so the client knows what's coming, then a blank line:
           client.println("HTTP/1.1 200 OK");
           client.println("Content-type:text/html");
           client.println("Connection: close");
           client.println();
-
-          // perform GET operations
-          if (m_header.indexOf("GET /26/on") >= 0)
-          {
-          }
-
           // Display the HTML web page
           client.println("<!DOCTYPE html><html>");
           client.println("<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
@@ -104,4 +105,23 @@ void WebServer::client_connected(WiFiClient& client)
   client.stop();
   Serial.println("Client disconnected.");
   Serial.println("");
+}
+
+void WebServer::api_get_weather(WiFiClient& client)
+{
+  String json = "{\"temperature\":" + String(m_state.temperature, 2) +
+    ",\"humidity\":" + String(m_state.humidity, 2) + "}";
+
+  json_response(client, json);
+}
+
+void WebServer::json_response(WiFiClient& client, String& json)
+{
+  // HTTP header + body
+  client.println("HTTP/1.1 200 OK");
+  client.println("Content-Type: application/json");
+  client.println("Content-Length: " + String(json.length()));
+  client.println("Connection: close");
+  client.println(); // blank line separates headers from body
+  client.println(json);
 }

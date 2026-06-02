@@ -9,6 +9,7 @@ struct AppState
 {
     float temperature;
     float humidity;
+    int soil;
 };
 
 #endif //WEATHER_STATIION_APP_STATE_H

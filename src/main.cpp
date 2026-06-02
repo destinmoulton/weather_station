@@ -28,9 +28,14 @@ void setup()
 {
   Serial.begin(115200);
 
-  while (!Serial)
+  // Wait for Serial, but don't hang forever
+  // (timeout ~2 seconds)
+  // The USB UART interface means that this will hang
+  // if the Serial connection isn't found.
+  unsigned long startTime = millis();
+  while (!Serial && (millis() - startTime < 2000))
   {
-    delay(10); // Wait for Serial to be ready
+    delay(10);
   }
 
   // Delay another 1 sec for the serial connection (buggy)

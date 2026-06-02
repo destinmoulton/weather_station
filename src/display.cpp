@@ -16,9 +16,6 @@ Display::Display(AppState& state, EventDispatcher& dispatcher)
       m_screen_settings(m_oled, state, dispatcher),
       m_screen_wifi_info(m_oled, state, dispatcher)
 {
-    m_oled = Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
-
-
     dispatcher.registerHandler(Event::PressButtonUp, [this]() { handlePressButtonUp(); });
     dispatcher.registerHandler(Event::PressButtonDown, [this]() { handlePressButtonDown(); });
     dispatcher.registerHandler(Event::PressButtonLeft, [this]() { handlePressButtonLeft(); });
@@ -38,6 +35,9 @@ Display::~Display()
 
 bool Display::begin()
 {
+    Serial.println("Display:: Configuring oled display...");
+    Wire.begin(OLED_PIN_SDA, OLED_PIN_SCL);
+    m_oled = Adafruit_SSD1306(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
     if (!m_oled.begin(SSD1306_SWITCHCAPVCC, 0x3C))
     {
         // Address 0x3D for 128x64

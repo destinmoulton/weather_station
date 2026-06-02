@@ -25,5 +25,7 @@ private:
     WiFiServer m_wifi_server;
     String m_header;
     void client_connected(WiFiClient& client);
+    void api_get_weather(WiFiClient& client);
+    void json_response(WiFiClient& client, String& json);
 };
 #endif //WEATHER_STATION_WEBSERVER_H

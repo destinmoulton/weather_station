@@ -15,11 +15,16 @@ Weather::Weather(AppState& state, EventDispatcher& dispatcher)
     {
         m_temperatures[i] = 0.0;
         m_humidities[i] = 0.0;
+        m_soil_readings[i] = 0;
     }
 }
 
 void Weather::begin()
 {
+    // Set the pin attenuation for the soil sensor
+    // to be 0-3.9V (full 3.3V rail)
+    analogSetPinAttenuation(SOIL_SENSOR_PIN, ADC_11db);
+
     // Start DHT
     m_dht.begin();
 }
@@ -40,9 +45,12 @@ void Weather::loop()
 
 void Weather::read_sensor()
 {
+    // Get the humidity
     float h = m_dht.readHumidity();
     // Read temperature as Farenheit
     float t = m_dht.readTemperature(true);
+    // Get the soil capacitive reading
+    int s = analogRead(SOIL_SENSOR_PIN);
 
     if (isnan(h) || isnan(t))
     {
@@ -52,8 +60,10 @@ void Weather::read_sensor()
 
     int count_nonzero_temperatures = 0;
     int count_nonzero_humidities = 0;
+    int count_nonzero_soil_readings = 0;
     float total_temperature = 0.0;
     float total_humidity = 0.0;
+    unsigned long total_soil_reading = 0;
     for (int i = DHT_NUM_TO_AVERAGE - 1; i >= 0; i--)
     {
         if (i > 0)
@@ -61,12 +71,14 @@ void Weather::read_sensor()
             // Shift the values for the averaging
             m_temperatures[i] = m_temperatures[i - 1];
             m_humidities[i] = m_humidities[i - 1];
+            m_soil_readings[i] = m_soil_readings[i - 1];
         }
         else
         {
             // Zeroth element becomes the newest reading
             m_temperatures[0] = t;
             m_humidities[0] = h;
+            m_soil_readings[0] = s;
         }
 
 
@@ -80,6 +92,11 @@ void Weather::read_sensor()
             count_nonzero_humidities++;
             total_humidity += m_humidities[i];
         }
+        if (m_soil_readings[i] != 0)
+        {
+            count_nonzero_soil_readings++;
+            total_soil_reading += m_soil_readings[i];
+        }
     }
 
     if (count_nonzero_temperatures > 0)
@@ -90,6 +107,11 @@ void Weather::read_sensor()
     if (count_nonzero_humidities > 0)
     {
         m_state.humidity = total_humidity / count_nonzero_humidities;
+    }
+
+    if (count_nonzero_soil_readings > 0)
+    {
+        m_state.soil = total_soil_reading / count_nonzero_soil_readings;
     }
 
     if (count_nonzero_temperatures == 1)

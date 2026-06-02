@@ -6,10 +6,10 @@
 #define WEATHER_STATION_BUTTONS_H
 #include "event_dispatcher.h"
 
-#define PIN_BUTTON_UP 34
-#define PIN_BUTTON_DOWN 35
-#define PIN_BUTTON_LEFT 32
-#define PIN_BUTTON_RIGHT 33
+#define PIN_BUTTON_UP 2
+#define PIN_BUTTON_DOWN 42
+#define PIN_BUTTON_LEFT 41
+#define PIN_BUTTON_RIGHT 40
 #define BUTTON_DEBOUNCE_TIME 200
 
 

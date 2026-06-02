@@ -15,6 +15,8 @@
 #include "screen_wifi_info.h"
 #include "appstate.h"
 
+#define OLED_PIN_SDA 8
+#define OLED_PIN_SCL 9
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
 #define OLED_RESET  -1

@@ -38,6 +38,7 @@ Buttons::~Buttons()
 
 void Buttons::begin()
 {
+    Serial.println("Buttons:: Setting pinModes to INPUT.");
     // Set the physical button pin modes
     pinMode(PIN_BUTTON_UP, INPUT);
     pinMode(PIN_BUTTON_DOWN, INPUT);
@@ -45,10 +46,10 @@ void Buttons::begin()
     pinMode(PIN_BUTTON_RIGHT, INPUT);
 
 
+    Serial.println("Buttons:: Attaching button interrupts.");
     attachInterruptArg(PIN_BUTTON_UP, onInterruptPressButton, (void*)(uintptr_t)BUTTON_UP, RISING);
     attachInterruptArg(PIN_BUTTON_DOWN, onInterruptPressButton, (void*)(uintptr_t)BUTTON_DOWN, RISING);
     attachInterruptArg(PIN_BUTTON_LEFT, onInterruptPressButton, (void*)(uintptr_t)BUTTON_LEFT, RISING);
-    attachInterruptArg(PIN_BUTTON_RIGHT, onInterruptPressButton, (void*)(uintptr_t)BUTTON_RIGHT, RISING);
     attachInterruptArg(PIN_BUTTON_RIGHT, onInterruptPressButton, (void*)(uintptr_t)BUTTON_RIGHT, RISING);
 }
 
