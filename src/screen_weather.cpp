@@ -20,7 +20,28 @@ void ScreenWeather::render()
     m_device.setTextSize(2);
     m_device.printf("%4.2f%c F\n", m_state.temperature, 0xF8);
     m_device.printf("%4.2f%% Hum\n", m_state.humidity);
-    m_device.printf("%d Soil\n", m_state.soil);
+
+    if (m_state.soil > 2700)
+    {
+        m_device.printf("%c%c%c%c", 0xB0, 0xB0, 0xB0, 0xB0);
+    }
+    else if (m_state.soil <= 2700 && m_state.soil > 2300)
+    {
+        m_device.printf("%c%c%c%c", 0xB2, 0xB0, 0xB0, 0xB0);
+    }
+    else if (m_state.soil <= 2300 && m_state.soil > 1900)
+    {
+        m_device.printf("%c%c%c%c", 0xB2, 0xB2, 0xB0, 0xB0);
+    }
+    else if (m_state.soil <= 1900 && m_state.soil > 1500)
+    {
+        m_device.printf("%c%c%c%c", 0xB2, 0xB2, 0xB2, 0xB0);
+    }
+    else if (m_state.soil <= 1500)
+    {
+        m_device.printf("%c%c%c%c", 0xB2, 0xB2, 0xB2, 0xB2);
+    }
+    //m_device.printf("%d Soil\n", m_state.soil);
     m_device.display();
 }
 
