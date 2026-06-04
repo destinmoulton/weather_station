@@ -40,10 +40,10 @@ void Buttons::begin()
 {
     Serial.println("Buttons:: Setting pinModes to INPUT.");
     // Set the physical button pin modes
-    pinMode(PIN_BUTTON_UP, INPUT);
-    pinMode(PIN_BUTTON_DOWN, INPUT);
-    pinMode(PIN_BUTTON_LEFT, INPUT);
-    pinMode(PIN_BUTTON_RIGHT, INPUT);
+    pinMode(PIN_BUTTON_UP, INPUT_PULLDOWN);
+    pinMode(PIN_BUTTON_DOWN, INPUT_PULLDOWN);
+    pinMode(PIN_BUTTON_LEFT, INPUT_PULLDOWN);
+    pinMode(PIN_BUTTON_RIGHT, INPUT_PULLDOWN);
 
 
     Serial.println("Buttons:: Attaching button interrupts.");

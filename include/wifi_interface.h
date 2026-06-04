@@ -2,8 +2,7 @@
 // Created by destin on 5/28/26.
 //
 
-#ifndef WEATHER_STATION_WIFI_H
-#define WEATHER_STATION_WIFI_H
+#pragma once
 
 #include <WiFi.h>
 #include <WiFiUdp.h>
@@ -29,4 +28,3 @@ private:
     const IPAddress m_config_primary_DNS;
     const IPAddress m_config_secondary_DNS;
 };
-#endif //WEATHER_STATION_WIFI_H

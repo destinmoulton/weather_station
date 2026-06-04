@@ -2,8 +2,7 @@
 // Created by destin on 5/29/26.
 //
 
-#ifndef WEATHER_STATION_WEBSERVER_H
-#define WEATHER_STATION_WEBSERVER_H
+#pragma once
 
 #include <WiFi.h>
 //#include <WiFiServer.h>
@@ -28,4 +27,3 @@ private:
     void api_get_weather(WiFiClient& client);
     void json_response(WiFiClient& client, String& json);
 };
-#endif //WEATHER_STATION_WEBSERVER_H

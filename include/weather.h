@@ -2,8 +2,8 @@
 // Created by destin on 5/29/26.
 //
 
-#ifndef WEATHER_STATION_WEATHER_H
-#define WEATHER_STATION_WEATHER_H
+#pragma once
+
 #include "appstate.h"
 #include "event_dispatcher.h"
 #include <DHT.h>
@@ -34,4 +34,3 @@ private:
     DHT m_dht;
     void read_sensor();
 };
-#endif //WEATHER_STATION_WEATHER_H

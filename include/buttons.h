@@ -2,8 +2,8 @@
 // Created by destin on 5/20/26.
 //
 
-#ifndef WEATHER_STATION_BUTTONS_H
-#define WEATHER_STATION_BUTTONS_H
+#pragma once
+
 #include "event_dispatcher.h"
 
 #define PIN_BUTTON_UP 2
@@ -38,4 +38,3 @@ protected:
     static void IRAM_ATTR onInterruptPressButton(void* arg);
     static void task(void* pvParameters);
 };
-#endif //WEATHER_STATION_BUTTONS_H

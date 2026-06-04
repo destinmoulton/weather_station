@@ -2,8 +2,8 @@
 // Created by destin on 5/20/26.
 //
 
-#ifndef WEATHER_STATION_EVENT_DISPATCHER_H
-#define WEATHER_STATION_EVENT_DISPATCHER_H
+#pragma once
+
 #include <functional>
 #include <unordered_map>
 #include <vector>
@@ -37,4 +37,3 @@ public:
 private:
     std::unordered_map<Event, std::vector<EventHandler>> handlers;
 };
-#endif //WEATHER_STATION_EVENT_DISPATCHER_H

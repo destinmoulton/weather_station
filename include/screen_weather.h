@@ -2,8 +2,7 @@
 // Created by destin on 5/28/26.
 //
 
-#ifndef WEATHER_STATION_SCREEN_WEATHER_H
-#define WEATHER_STATION_SCREEN_WEATHER_H
+#pragma once
 
 class ScreenWeather : public Screen
 {
@@ -13,4 +12,3 @@ public:
     void onLeft() override;
     void onRight() override;
 };
-#endif //WEATHER_STATION_SCREEN_WEATHER_H

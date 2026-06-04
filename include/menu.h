@@ -2,8 +2,7 @@
 // Created by destin on 5/21/26.
 //
 
-#ifndef WEATHER_STATION_MENU_H
-#define WEATHER_STATION_MENU_H
+#pragma once
 #include <vector>
 
 #include "screen.h"
@@ -33,4 +32,3 @@ protected:
 };
 
 
-#endif //WEATHER_STATION_MENU_H

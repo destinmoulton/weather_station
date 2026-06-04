@@ -2,8 +2,8 @@
 // Created by destin on 5/21/26.
 //
 
-#ifndef WEATHER_STATION_SCREEN_H
-#define WEATHER_STATION_SCREEN_H
+#pragma once
+
 #include "Adafruit_SSD1306.h"
 #include "event_dispatcher.h"
 #include "appstate.h"
@@ -23,4 +23,3 @@ protected:
     const AppState& m_state;
     EventDispatcher& m_dispatcher;
 };
-#endif //WEATHER_STATION_SCREEN_H

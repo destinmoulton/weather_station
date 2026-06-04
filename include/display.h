@@ -2,8 +2,7 @@
 // Created by destin on 5/20/26.
 //
 
-#ifndef DISPLAY_H
-#define DISPLAY_H
+#pragma once
 
 #include <Adafruit_SSD1306.h> // oled
 #include <memory>
@@ -60,4 +59,3 @@ protected:
 
 private:
 };
-#endif //DISPLAY_H
