@@ -8,11 +8,9 @@
 #include "event_dispatcher.h"
 #include <DHT.h>
 
-#define DHT_PIN 1
 #define DHT_TYPE DHT11
 #define DHT_NUM_TO_AVERAGE 30
 #define DHT_DELAY_MS 4000
-#define SOIL_SENSOR_PIN 4
 
 class Weather
 {

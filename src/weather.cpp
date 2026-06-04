@@ -4,11 +4,12 @@
 
 #include "weather.h"
 #include <DHT.h>
+#include "pins.h"
 
 Weather::Weather(AppState& state, EventDispatcher& dispatcher)
     : m_state(state),
       m_dispatcher(dispatcher),
-      m_dht(DHT_PIN, DHT_TYPE)
+      m_dht(PIN_DHT_SENSOR, DHT_TYPE)
 {
     // Initialize the temperature and humidity arrays for averaging
     for (int i = 0; i < DHT_NUM_TO_AVERAGE; i++)
@@ -23,7 +24,7 @@ void Weather::begin()
 {
     // Set the pin attenuation for the soil sensor
     // to be 0-3.9V (full 3.3V rail)
-    analogSetPinAttenuation(SOIL_SENSOR_PIN, ADC_11db);
+    analogSetPinAttenuation(PIN_SOIL_SENSOR, ADC_11db);
 
     // Start DHT
     m_dht.begin();
@@ -50,7 +51,7 @@ void Weather::read_sensor()
     // Read temperature as Farenheit
     float t = m_dht.readTemperature(true);
     // Get the soil capacitive reading
-    int s = analogRead(SOIL_SENSOR_PIN);
+    int s = analogRead(PIN_SOIL_SENSOR);
 
     if (isnan(h) || isnan(t))
     {

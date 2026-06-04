@@ -2,11 +2,11 @@
 // Created by destin on 5/20/26.
 //
 
-#include <Wire.h>
-#include "buttons.h"
-
 #include <Arduino.h>
+#include <Wire.h>
 
+#include "pins.h"
+#include "buttons.h"
 #include "event_dispatcher.h"
 
 // Stati definitions
