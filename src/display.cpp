@@ -3,6 +3,7 @@
 //
 
 #include <Adafruit_SSD1306.h> // oled
+#include "pins.h"
 #include "display.h"
 
 #include <Wire.h>
