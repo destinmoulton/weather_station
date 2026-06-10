@@ -30,7 +30,7 @@ void WebServer::loop()
 void WebServer::client_connected(WiFiClient& client)
 {
   // If a new client connects,
-  Serial.println("New Client."); // print a message out in the serial port
+  Serial.println("WebServer::client_connected() - New Client."); // print a message out in the serial port
   String currentLine = ""; // make a String to hold incoming data from the client
   while (client.connected())
   {
@@ -38,8 +38,9 @@ void WebServer::client_connected(WiFiClient& client)
     if (client.available())
     {
       // if there's bytes to read from the client,
+
       char c = client.read(); // read a byte, then
-      Serial.write(c); // print it out the serial monitor
+      //Serial.write(c); // print it out the serial monitor
       m_header += c;
       if (c == '\n')
       {
@@ -48,10 +49,16 @@ void WebServer::client_connected(WiFiClient& client)
         // that's the end of the client HTTP request, so send a response:
         if (currentLine.length() == 0)
         {
+          Serial.println("WebServer::client_connected() - Generating response...");
           // perform GET operations
-          if (m_header.indexOf("GET /weather") >= 0)
+          if (m_header.indexOf("GET /api/weather") >= 0)
           {
             api_get_weather(client);
+            break;
+          }
+          if (m_header.indexOf("GET /api/soil") >= 0)
+          {
+            api_get_soil_sensor(client);
             break;
           }
 
@@ -109,8 +116,18 @@ void WebServer::client_connected(WiFiClient& client)
 
 void WebServer::api_get_weather(WiFiClient& client)
 {
+  Serial.println("WebServer::api_get_weather() - Getting weather...");
   String json = "{\"temperature\":" + String(m_state.temperature, 2) +
     ",\"humidity\":" + String(m_state.humidity, 2) + "}";
+
+  json_response(client, json);
+}
+
+void WebServer::api_get_soil_sensor(WiFiClient& client)
+{
+  Serial.println("WebServer::api_get_soil_sensor() - Getting soil sensor reading json...");
+  String json = "{\"soil_sensor_a\":" + String(m_state.soil) +
+    ",\"soil_sensor_b\":" + String(m_state.soil) + "}";
 
   json_response(client, json);
 }

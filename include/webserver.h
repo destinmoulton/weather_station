@@ -9,7 +9,7 @@
 #include "appstate.h"
 #include "event_dispatcher.h"
 
-#define WEBSERVER_PORT 8080
+#define WEBSERVER_PORT 80
 
 class WebServer
 {
@@ -25,5 +25,6 @@ private:
     String m_header;
     void client_connected(WiFiClient& client);
     void api_get_weather(WiFiClient& client);
+    void api_get_soil_sensor(WiFiClient& client);
     void json_response(WiFiClient& client, String& json);
 };

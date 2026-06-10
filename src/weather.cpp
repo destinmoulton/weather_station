@@ -24,7 +24,7 @@ void Weather::begin()
 {
     // Set the pin attenuation for the soil sensor
     // to be 0-3.9V (full 3.3V rail)
-    analogSetPinAttenuation(PIN_SOIL_SENSOR, ADC_11db);
+    analogSetPinAttenuation(PIN_SOIL_A_SENSOR, ADC_11db);
 
     // Start DHT
     m_dht.begin();
@@ -51,7 +51,7 @@ void Weather::read_sensor()
     // Read temperature as Farenheit
     float t = m_dht.readTemperature(true);
     // Get the soil capacitive reading
-    int s = analogRead(PIN_SOIL_SENSOR);
+    int s = analogRead(PIN_SOIL_A_SENSOR);
 
     if (isnan(h) || isnan(t))
     {

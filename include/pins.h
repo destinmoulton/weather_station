@@ -28,7 +28,8 @@
 
 // Weather Pins
 #define PIN_DHT_SENSOR 4
-#define PIN_SOIL_SENSOR 39
+#define PIN_SOIL_A_SENSOR 34
+#define PIN_SOIL_B_SENSOR 35
 
 #define OLED_PIN_SDA 32
 #define OLED_PIN_SCL 33
