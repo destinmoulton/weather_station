@@ -15,8 +15,11 @@ Display::Display(AppState& state, EventDispatcher& dispatcher)
       m_screen_loading(m_oled, state, dispatcher),
       m_screen_weather(m_oled, state, dispatcher),
       m_screen_settings(m_oled, state, dispatcher),
-      m_screen_wifi_info(m_oled, state, dispatcher)
+      m_screen_wifi_info(m_oled, state, dispatcher),
+      m_is_screen_awake(false),
+      m_sleep_timer_ms(0)
 {
+    dispatcher.registerHandler(Event::PressAnyButton, [this]() { handlePressAnyButton(); });
     dispatcher.registerHandler(Event::PressButtonUp, [this]() { handlePressButtonUp(); });
     dispatcher.registerHandler(Event::PressButtonDown, [this]() { handlePressButtonDown(); });
     dispatcher.registerHandler(Event::PressButtonLeft, [this]() { handlePressButtonLeft(); });
@@ -49,6 +52,11 @@ bool Display::begin()
     // Enable advanced character set (for things like degree symbol)
     m_oled.cp437(true);
     m_oled.setTextColor(WHITE);
+
+    // The screen should be on when started
+    m_is_screen_awake = true;
+    // Every button press keeps it alive
+    m_sleep_timer_ms = millis() + SCREEN_SLEEP_MS;
 
     changeScreen(View::Loading);
 
@@ -90,6 +98,18 @@ void Display::handleNextView()
     }
 }
 
+void Display::handlePressAnyButton()
+{
+    Serial.println("Display::handlePressAnyButton");
+    if (!m_is_screen_awake)
+    {
+        turnDisplayOn();
+    }
+
+    // Every button press keeps it alive
+    m_sleep_timer_ms = millis() + SCREEN_SLEEP_MS;
+}
+
 void Display::handlePressButtonUp()
 {
     m_active_screen->onUp();
@@ -108,6 +128,18 @@ void Display::handlePressButtonLeft()
 void Display::handlePressButtonRight()
 {
     m_active_screen->onRight();
+}
+
+void Display::turnDisplayOn()
+{
+    m_oled.ssd1306_command(SSD1306_DISPLAYON); // 0xAE
+    m_is_screen_awake = true;
+}
+
+void Display::turnDisplayOff()
+{
+    m_oled.ssd1306_command(SSD1306_DISPLAYOFF); // 0xAE
+    m_is_screen_awake = false;
 }
 
 void Display::changeScreen(const View view)
@@ -137,3 +169,15 @@ void Display::render()
     m_active_screen->render();
 }
 
+void Display::loop()
+{
+    if (m_is_screen_awake)
+    {
+        unsigned long now = millis();
+        if (m_sleep_timer_ms - now <= 0)
+        {
+            Serial.println("Display::loop() - Sleep timer expired.");
+            turnDisplayOff();
+        }
+    }
+}

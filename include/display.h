@@ -16,6 +16,7 @@
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
+#define SCREEN_SLEEP_MS 10000 // Amount of ms before sleeping the display
 #define OLED_RESET  -1
 
 enum class View
@@ -33,9 +34,11 @@ public:
     Display(AppState& state, EventDispatcher& dispatcher);
     ~Display();
     bool begin();
+    void loop();
     void handleNextView();
     void handleWeatherInitialLoadComplete();
     void handleWeatherUpdate();
+    void handlePressAnyButton();
     void handlePressButtonUp();
     void handlePressButtonDown();
     void handlePressButtonLeft();
@@ -52,6 +55,12 @@ protected:
     ScreenWeather m_screen_weather;
     MenuSettings m_screen_settings;
     ScreenWifiInfo m_screen_wifi_info;
+    bool m_is_screen_awake;
+    unsigned int m_sleep_timer_ms;
+
+    void turnDisplayOn();
+    void turnDisplayOff();
+
     void changeScreen(const View view);
     void render();
 

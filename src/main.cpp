@@ -72,4 +72,7 @@ void loop()
 
   // Run the webserver loop
   webserver.loop();
+
+  // Run the display loop
+  display.loop();
 }

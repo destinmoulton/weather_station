@@ -19,6 +19,7 @@ enum class Event
     JumpToSettingsScreen,
     WifiRestart,
     Reboot,
+    PressAnyButton,
     PressButtonUp,
     PressButtonDown,
     PressButtonLeft,

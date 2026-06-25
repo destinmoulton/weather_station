@@ -92,6 +92,9 @@ void Buttons::task(void* pvParameters)
         // Block until an event arrives in the queue
         if (xQueueReceive(self->m_eventQueue, &evt, portMAX_DELAY))
         {
+            // Fire the event when any button is pressed
+            // This is used for things like waking the display
+            self->m_dispatcher.dispatch(Event::PressAnyButton);
             switch (evt)
             {
             case ButtonEvent::BUTTON_UP:
